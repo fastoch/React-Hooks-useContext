@@ -23,7 +23,10 @@ In 2019, the `useContext` hook made accessing context values as easy as calling 
 # What is **Prop Drilling**
 
 It's when we are required to pass props through multiple levels of components to let them access data.  
-But thanks to the `useContext` hook, we no longer need to do **prop drilling**.
+But thanks to the `useContext` hook, we no longer need to do **prop drilling**.  
+
+Eliminating "prop drilling" makes our code more concise and maintainable.  
+That's especially true in applications with deeply nested components. 
 
 # How does `useContext` work?
 
@@ -172,9 +175,55 @@ The **component tree** would look something like that:
     - Header
     - Content
     - Sidebar
+      - CartSummary
+
+## Sharing data through "prop drilling" 
+
+Inside the App component, we would create 3 states: user, isDarkMode, and cart  
+Then we render the Dashboard component and pass each state as a prop.  
+
+<img src="image-5.png" alt="The App component" width="600">  
+
+Then, inside the Dashboard component, we also need to pass these states to the Header and Content components.  
+And that means we would also need to create multiple props for each component.  
+
+<img src="image-6.png" alt="The Dashboard component" width="800">  
+
+And then, inside the Sidebar component, we also need to pass the prop in CartSummary which will display the cart state:
+
+<img src="image-7.png" alt="The Sidebar component" width="600">  
+
+That way of doing things is troublesome and complicated to maintain.  
+It would be much better if we could just pass the states directly to the components that need them.  
+That's what the **Context API** (2018) and the `useContext` hook (2019) do.  
+
+## Sharing data through Context 
+
+- In the App component, we can remove the props from the Dashboard.  
+- Then, let's create 3 contexts for each state: UserContext, ThemeContext, and CartContext.  
+- next, let's wrap the Dashboard with each context 
+- and finally, let's use a Provider to store the state values (so that we can access them later on)
+
+Here's the new code for the App component:  
+<img src="image-8.png" alt="The App component" width="700">  
+
+Now that we've set up the contexts, we can easily access the specific state that we need from anywhere.  
+
+Let's take the deepest component in the component tree, which is CartSummary.  
+Previously, to get the state for the cart into CartSummary, we had to pass it from App to Dashboard, 
+then from Dashboard to Sidebar, and finally, from Sidebar to CartSummary.  
+
+But with CartContext, we can simply access the context using `useContext`, store it in a variable, 
+and then use the cart state directly in CartSummary:
+<img src="image-9.png" alt="The App component" width="600">  
+
+Of course, the same applies to UserContext and ThemeContext in other components like the Header and Content:
+<img src="image-10.png" alt="The App component" width="800">  
 
 # Conclusion
 
-Eliminating "prop drilling" makes our code more concise and maintainable.  
-That's especially true in applications with deeply nested components.  
+In conclusion, `useContext` makes it easy to share information like user details, themes, or login status 
+between different parts of our application.  
 
+And the best part is that it works well with other hooks, like `useReducer`, so we can make a central place
+to store all of our states. It's like a more **relaxed** version of **Redux**.  
