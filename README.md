@@ -20,6 +20,11 @@ It's the easy direct way to share a **state** in React.
 In 2018, React added the **Context API** to help with the annoying issue of **prop drilling**.  
 In 2019, the `useContext` hook made accessing context values as easy as calling a function inside your component.  
 
+# What is **Prop Drilling**
+
+It's when we are required to pass props through multiple levels of components to let them access data.  
+But thanks to the `useContext` hook, we no longer need to do **prop drilling**.
+
 # How does `useContext` work?
 
 Think of it like a magic **portal** that sends data to any component in your app without needing to pass
@@ -34,12 +39,16 @@ the items we want to send.
  
 <img src="image.png" alt="snippet showing createContext in action" width="600">  
   
-
-To use the portal in any component, we use the `useContext` hook, just passing it the portal we 
-created with `createContext()`.  
-Then extract the data into a variable :
+To then use the portal in any component, we use the `useContext` hook, just passing the portal we 
+created (with `createContext()`) to `useContext`.  
+Then extract the data from the context/portal into a variable:  
 
 <img src="image-1.png" alt="snippet showing useContext in action" width="600">  
+
+Of course, we can do the same in the `DiningRoom` component:  
+
+<img src="image-2.png" alt="snippet showing useContext in action" width="600">  
+
 
 # How to create a Context?
 
@@ -123,3 +132,49 @@ export const UserProfile = () => {
 ```
 Now, the `UserProfile` component has access to the `user` state from `DashboardPage` without it 
 ever being passed as a **prop**! This is the **power** of the **Context API**.  
+
+# Recap - how the Context API allows us to eliminate prop drilling
+
+## createContext(), name it, and use the .Provider component
+
+- create a context/portal via `createContext`, which acts as a **portal**
+- name the portal by placing it in a variable
+- use the `Provider` component that comes with the Context to wrap the components that need access
+  to the shared value
+- place the data inside the `Provider` component via the `value` prop   
+
+<img src="image-3.png" alt="createContext and Provider" width="600">  
+
+By doing this, any **component** inside the `Provider` can access the `value`, without needing to pass it 
+through **props** at every level.  
+
+## open the portal with useContext() and access the data
+
+And finally, to get that `name` state in any child component that is wrapped inside the `Provider`, 
+we just need to use the `useContext` hook.  
+
+This hook allows us to open the portal that we've created.  
+We simply pass the name of the portal/context to the hook, and store the result in a variable.  
+And then we can use that variable in a component to access the data from that portal.  
+
+<img src="image-4.png" alt="useContext in action" width="600">  
+
+# e-commerce dashboard example
+
+We can appreciate the benefits of using the `useContext` hook when we need to manage multiple states with `useState`.  
+
+Imagine we have an e-commerce dashboard where we need to pass user information, theme settings, and shopping cart state
+through multiple nested components.  
+
+The **component tree** would look something like that:  
+- The App component 
+  - The Dashboard component
+    - Header
+    - Content
+    - Sidebar
+
+# Conclusion
+
+Eliminating "prop drilling" makes our code more concise and maintainable.  
+That's especially true in applications with deeply nested components.  
+
